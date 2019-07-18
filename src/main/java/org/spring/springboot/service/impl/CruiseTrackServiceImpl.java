@@ -2,7 +2,6 @@ package org.spring.springboot.service.impl;
 
 import org.spring.springboot.dao.CruiseTrackDao;
 import org.spring.springboot.domain.CruiseTrackEntity;
-import org.spring.springboot.domain.CruiseTrackPolicyEnum;
 import org.spring.springboot.service.ICruiseTrackService;
 import org.spring.springboot.utils.SGCCConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class CruiseTrackServiceImpl implements ICruiseTrackService {
 
 
     @Override
-    public int addNewCruiseTrack(long trackId, String trackName, long devId, int funcNo, String trackPointList, CruiseTrackPolicyEnum policy) {
+    public int addNewCruiseTrack(long trackId, String trackName, long devId, int funcNo, String trackPointList, Integer policy) {
 
         CruiseTrackEntity cruiseTrack = new CruiseTrackEntity();
 
@@ -52,7 +51,7 @@ public class CruiseTrackServiceImpl implements ICruiseTrackService {
         cruiseTrack.setDevId(devId);
         cruiseTrack.setFuncNo(funcNo);
         cruiseTrack.setPresetPositionQueue(trackPointList);
-        cruiseTrack.setCruisePolicy(policy.getPolicy());
+        cruiseTrack.setCruisePolicy(policy);
         cruiseTrack.setCreateTime(Calendar.getInstance().getTimeInMillis());
         cruiseTrack.setUpdateTime(Calendar.getInstance().getTimeInMillis());
 

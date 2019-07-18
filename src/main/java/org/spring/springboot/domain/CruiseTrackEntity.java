@@ -1,9 +1,17 @@
 package org.spring.springboot.domain;
 
+/*
+* 此数据对象 用于记录巡航轨迹的静态数据；与 CruiseTaskEntity 需要区分开，CruiseTaskEntity 用于记录 巡航任务 的动态状态；
+* */
 public class CruiseTrackEntity {
 
+    //
     private Long trackId;
     private String trackName;
+    /*
+    * 1,15,10,10;2,15,10,10;3,15,10,10;4,15,10,10;5,15,10,10;6,15,10,10;7,15,10,10;8,15,10,10;
+    * 使用 ';'分割 各个预置位信息；每个预置位由 唯一编号(取值范围0~255), 云台转动时间，镜头聚焦时间, 数据采集时间；四个字段组成；各个字段之间使用','分割
+    */
     private String presetPositionQueue;
     private Long devId;
     private Integer funcNo;

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.springboot.domain.ResponseResultEntity;
 import org.spring.springboot.domain.CruiseTrackEntity;
-import org.spring.springboot.domain.CruiseTrackPolicyEnum;
 import org.spring.springboot.service.impl.CruiseTrackServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -67,7 +66,7 @@ public class CruiseTrackController {
         System.out.println(Calendar.getInstance().getTime().toString() +  " maxTrackId:" + trackId);
         int ret = 0;
         try{
-            ret = cruiseTrackService.addNewCruiseTrack(trackId,cruiseTrack.getTrackName(),cruiseTrack.getDevId(),maxFuncNo,cruiseTrack.getPresetPositionQueue(), CruiseTrackPolicyEnum.CT_POLICY_1);
+            ret = cruiseTrackService.addNewCruiseTrack(trackId,cruiseTrack.getTrackName(),cruiseTrack.getDevId(),maxFuncNo,cruiseTrack.getPresetPositionQueue(), cruiseTrack.getCruisePolicy());
             if(ret == 1){
                 response.setStatus(0);
                 response.setMsg("add new cruise track success;");
