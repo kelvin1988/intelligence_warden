@@ -14,11 +14,11 @@
 	</resultMap>
 
 	<select id="getMaxFuncNo" resultType="java.lang.Integer">
-        select max(func_no) as MaxFuncNo from cruise_track_tb
+        select ifnull(max(func_no),0) as MaxFuncNo from cruise_track_tb
     </select>
 
-	<select id="getTrackId" resultType="java.lang.Long">
-		select max(track_id) as MaxFuncNo from cruise_track_tb
+	<select id="getMaxTrackId" resultType="java.lang.Long">
+		select ifnull(max(track_id),0) as trackId from cruise_track_tb
 	</select>
 
 	<select id="findAllCruiseTrackByDevId" parameterType="java.lang.Long"  resultMap="CruiseTrackEntity">
@@ -32,4 +32,12 @@
   			    ,#{cruiseTrack.funcNo,jdbcType=INTEGER},#{cruiseTrack.cruisePolicy,jdbcType=INTEGER}
   			    ,#{cruiseTrack.updateTime,jdbcType=BIGINT},#{cruiseTrack.createTime,jdbcType=BIGINT})
 	</insert>
+
+	<select id="getTotalRecordsOfCruiseTrack" resultType="java.lang.Long">
+		select count(track_id) as totalCnt from cruise_track_tb
+	</select>
+
+	<select id="loadCruiseTrackParitical" resultMap="CruiseTrackEntity">
+		select * from cruise_track_tb order by track_id limit #{startRowId},#{count}
+	</select>
 </mapper>

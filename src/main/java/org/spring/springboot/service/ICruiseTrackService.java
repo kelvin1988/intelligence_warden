@@ -9,7 +9,7 @@ public interface ICruiseTrackService {
 
     public Integer getMaxFuncNo();
 
-    public Long getTrackId();
+    public Long getMaxTrackId();
 
     public Long generateTaskId(CruiseTrackEntity cruiseTrack);
 

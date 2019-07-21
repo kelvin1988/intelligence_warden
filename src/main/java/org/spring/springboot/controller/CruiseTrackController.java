@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.springboot.domain.ResponseResultEntity;
 import org.spring.springboot.domain.CruiseTrackEntity;
+import org.spring.springboot.service.impl.CruiseTaskServiceImpl;
 import org.spring.springboot.service.impl.CruiseTrackServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class CruiseTrackController {
     @Autowired
     private CruiseTrackServiceImpl cruiseTrackService ;
 
+
     /*
     * 新增巡航轨迹
     * */
@@ -28,45 +30,32 @@ public class CruiseTrackController {
     public ResponseResultEntity addNewCruiseTrack(@RequestBody CruiseTrackEntity cruiseTrack){
 
         ResponseResultEntity response = new ResponseResultEntity();
-
-        /// 判断 上一个 轨迹id是否为0,（程序启动时从数据库加载，正常加载后，maxFuncNo为有效值，若加载失败，则在使用时，再次尝试从数据库加载）
-        if(cruiseTrackService.maxFuncNo == 0){
-            try{
-                cruiseTrackService.maxFuncNo = cruiseTrackService.getMaxFuncNo();
-            }catch (Exception ex){
-                log.debug(ex.getMessage());
-                response.setStatus(-1);
-                response.setMsg("get max funcNo from db failed;");
-                HashMap<String,Object> dataMap = new HashMap<>();
-                dataMap.put("err",ex.getMessage());
-                response.setData(dataMap);
-
-                return response;
-            }
-        }
-        int maxFuncNo = ++ cruiseTrackService.maxFuncNo ;
+        int maxFuncNo = cruiseTrack.getFuncNo() ;
         System.out.println(Calendar.getInstance().getTime().toString() +  " maxFuncNo:" + maxFuncNo);
 
         /// 判断 上一个 轨迹id是否为0,（程序启动时从数据库加载，正常加载后，maxTrackId为有效值，若加载失败，则在使用时，再次尝试从数据库加载）
-        if(cruiseTrackService.maxTrackId == 0){
-            try{
-                cruiseTrackService.maxTrackId = cruiseTrackService.getTrackId();
-            }catch (Exception ex){
-                log.debug(ex.getMessage());
-                response.setStatus(-1);
-                response.setMsg("get max trackId from db failed;");
-                HashMap<String,Object> dataMap = new HashMap<>();
-                dataMap.put("err",ex.getMessage());
-                response.setData(dataMap);
+        long trackId = 0 ;
+        try{
+            // 程序启动时，会访问cruise_track_tb 表，获取轨迹id的最大值；若轨迹id最大值为0，则使用默认值
+            if(cruiseTrackService.maxTrackId == 0 )
+                trackId = cruiseTrackService.MAX_TRACK_ID;
+            else
+                trackId = ++ cruiseTrackService.maxTrackId;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            response.setStatus(-1);
+            response.setMsg("get max trackId from db failed;");
+            HashMap<String,Object> dataMap = new HashMap<>();
+            dataMap.put("err",ex.getMessage());
+            response.setData(dataMap);
 
-                return response;
-            }
+            return response;
         }
-        long trackId = ++ cruiseTrackService.maxTrackId  ;
-        System.out.println(Calendar.getInstance().getTime().toString() +  " maxTrackId:" + trackId);
+
+        System.out.println(Calendar.getInstance().getTime().toString() +  "trackId:" + trackId);
         int ret = 0;
         try{
-            ret = cruiseTrackService.addNewCruiseTrack(trackId,cruiseTrack.getTrackName(),cruiseTrack.getDevId(),maxFuncNo,cruiseTrack.getPresetPositionQueue(), cruiseTrack.getCruisePolicy());
+            ret = cruiseTrackService.addNewCruiseTrack( trackId,cruiseTrack.getTrackName(),cruiseTrack.getDevId(),maxFuncNo,cruiseTrack.getPresetPositionQueue(), cruiseTrack.getCruisePolicy());
             if(ret == 1){
                 response.setStatus(0);
                 response.setMsg("add new cruise track success;");
@@ -134,7 +123,6 @@ public class CruiseTrackController {
     @ResponseBody
     public ResponseResultEntity executeCruiseTrackTask(@RequestBody HashMap<String,Object> requestMap){
         ResponseResultEntity response = new ResponseResultEntity();
-
 
 
         return response;
